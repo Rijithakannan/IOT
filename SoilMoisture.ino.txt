@@ -1,0 +1,55 @@
+/*
+ * Project: IoT Based Soil Moisture Monitoring System
+ * Author: Rijitha Kannan (B.Tech IT Honours)
+ * Description: Monitors soil hydration levels and automates irrigation via Relay.
+ */
+
+// Pin Definitions
+const int sensorPin = A0;   // Soil moisture sensor connected to Analog Pin A0
+const int relayPin = 8;     // Relay module connected to Digital Pin 8
+const int ledPin = 13;      // Built-in LED for status alert
+
+// Thresholds (Adjust these based on your specific sensor calibration)
+const int dryThreshold = 800;   // Higher value means drier soil
+const int wetThreshold = 400;   // Lower value means wetter soil
+
+void setup() {
+  Serial.begin(9600);           // Initialize Serial Monitor
+  pinMode(relayPin, OUTPUT);    // Set Relay as Output
+  pinMode(ledPin, OUTPUT);      // Set LED as Output
+  
+  // Start with pump OFF (Relays are often Active-Low)
+  digitalWrite(relayPin, HIGH); 
+  Serial.println("--- System Initialized: Monitoring Soil Moisture ---");
+}
+
+void loop() {
+  // Read the analog value from the sensor
+  int sensorValue = analogRead(sensorPin);
+  
+  // Convert value to percentage for better readability
+  // 1023 = 0% moisture, 0 = 100% moisture (approx)
+  int moisturePercent = map(sensorValue, 1023, 0, 0, 100);
+
+  Serial.print("Sensor Value: ");
+  Serial.print(sensorValue);
+  Serial.print(" | Moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println("%");
+
+  // Logic for Automated Irrigation
+  if (sensorValue > dryThreshold) {
+    // Soil is dry -> Turn ON Pump
+    Serial.println("ALERT: Soil is DRY. Activating Water Pump...");
+    digitalWrite(relayPin, LOW);  // Turn on Relay
+    digitalWrite(ledPin, HIGH);   // Visual alert ON
+  } 
+  else if (sensorValue < wetThreshold) {
+    // Soil is hydrated -> Turn OFF Pump
+    Serial.println("STATUS: Soil is HYDRATED. Deactivating Pump.");
+    digitalWrite(relayPin, HIGH); // Turn off Relay
+    digitalWrite(ledPin, LOW);    // Visual alert OFF
+  }
+
+  delay(2000); // Wait for 2 seconds before next reading
+}
