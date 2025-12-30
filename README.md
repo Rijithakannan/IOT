@@ -55,7 +55,4 @@ CGPA: 9.1/10.0
 
 LinkedIn | GitHub
 
-Quick Tip for your GitHub:
-After you paste this, click the "Add File" button and upload a photo of your project (even if it's just the sensor and wires). A photo makes your GitHub look 10 times better to recruiters!
 
-Would you like me to create a similar professional README for your Customer Churn or AI Chatbot project next?
